@@ -567,6 +567,38 @@ Additional Business Rules / Notes:
   * Example: "Technology Stack: **Frontend Angular + Backend Laravel + Database MySQL**"
   * Supports audit-ready documentation of selected tech stack
 
+#### 11. **Bugs Enhancement Prompt Tab (Phase 7)**
+
+**Change:** Added a new tab and prompt generator for enterprise bug report creation
+
+**Implementation:**
+
+* **New Tab:** "Bugs Enhancement Prompt" added alongside "Test Scenarios Generation"
+* **Tab Switching:** Client-side only, toggles content panels with `.tab-panel` classes
+* **State Preservation:** Inputs remain intact when switching tabs (no reset)
+
+* **Bug Prompt Inputs (6 fields):**
+  * Bug Title
+  * Bug Description / Summary
+  * Preconditions
+  * Steps to Reproduce
+  * Expected Result
+  * Actual Result
+
+* **Prompt Template (Immutable):**
+  * Enterprise-grade bug report instructions and tone
+  * Enforces strict section order with emoji headers
+  * Output rules: no extra commentary, no meta text
+
+* **Prompt Generation Logic:**
+  * `generateBugPrompt()` embeds user input values into the fixed template
+  * Empty fields injected as empty content (no validation)
+  * Output rendered in read-only textarea with copy button
+
+* **Copy Behavior:**
+  * `copyBugPrompt()` uses the same clipboard logic and feedback animation
+  * Inline "Copied to clipboard" feedback, no alert dialogs
+
 ---
 
 ### Summary of Modifications
@@ -583,5 +615,6 @@ Additional Business Rules / Notes:
 | Tech Badges               | New Feature         | Visual component breakdown                     |
 | Platform-to-Tech Mapping  | New Feature         | Dynamic dropdown population                    |
 | Default Tech Stack        | Enhancement         | Web + Angular-Laravel-MySQL pre-selected       |
+| Bugs enhancement tab      | New Feature         | Dedicated bug report prompt generator          |
 
 **Status:** All modifications implemented and tested. System is fully operational and compliant with updated enterprise requirements.

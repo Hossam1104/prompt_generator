@@ -1,6 +1,6 @@
 # Enterprise QA Prompt Generator
 
-A standalone, single-file HTML application that generates comprehensive, enterprise-grade QA test scenario prompts for the Gazer dashboard system.
+A standalone, single-file HTML application that generates comprehensive, enterprise-grade QA test scenario prompts and bug report prompts for the Gazer dashboard system.
 
 ## 📋 Overview
 
@@ -19,6 +19,7 @@ This tool generates highly detailed, audit-ready test case prompts tailored for 
 - **Single-File Architecture** — No dependencies, no installation, works offline
 - **Dynamic Prompt Generation** — Combines master template with user inputs
 - **Intelligent Technology Stack Dropdown** — Platform-dependent tech selection with visual component badges
+- **Bugs Enhancement Prompt Tab** — Generates enterprise bug report prompts for AI completion
 - **Section Title Generator** — Auto-generates 7 test category titles with one-click copy
 - **Enterprise Compliance** — Outputs audit-ready, regulation-compliant test prompts
 - **Modern UI/UX** — Clean, gradient-based design with Cairo font family
@@ -37,6 +38,15 @@ This tool generates highly detailed, audit-ready test case prompts tailored for 
 4. **Story Title** — User story identifier (auto-strips "US" prefix for titles)
 5. **Story Description** — Full user story details
 6. **Additional Business Rules / Notes** — Constraints, edge cases, acceptance criteria
+
+### 🧾 Bugs Enhancement Prompt Inputs
+
+1. **Bug Title** — Concise summary of incorrect behavior
+2. **Bug Description / Summary** — Context and defect overview
+3. **Preconditions** — Required state or environment
+4. **Steps to Reproduce** — Deterministic reproduction steps
+5. **Expected Result** — Correct behavior expectations
+6. **Actual Result** — Observed incorrect behavior
 
 ### 📤 Generated Outputs
 
@@ -65,6 +75,12 @@ A comprehensive, structured prompt containing:
 - **Controlled Delivery** — Section-by-section with explicit compliance verification
 - **Self-Audit & Failsafe** — Built-in quality gates
 - **Final Compliance Gate** — Kill switch for non-compliant outputs
+
+#### 3. Bug Report Prompt
+A professional bug report prompt containing:
+- **Structured Sections** — Bug Title, Preconditions, Steps, Expected, Actual, Impact, Notes, Recommendation
+- **Enterprise Tone** — Neutral, precise, audit-ready language
+- **AI Instructions** — Clear rules for report completeness and formatting
 
 ---
 
@@ -134,6 +150,7 @@ A comprehensive, structured prompt containing:
 ✅ **Responsive** — Mobile-friendly breakpoint at 640px  
 ✅ **Accessible** — Semantic HTML, keyboard navigable  
 ✅ **Copy Feedback** — Visual confirmation on clipboard operations  
+✅ **Multi-Tab Prompts** — Test Scenarios and Bugs Enhancement tabs  
 ✅ **Auto-formatting** — Strips "US" prefix from story titles  
 ✅ **Fallback Support** — Legacy `execCommand` for older browsers
 
@@ -249,6 +266,7 @@ Per enterprise QA requirements:
 | No mandatory markers | ✅      | No asterisks or "required" labels         |
 | Tech stack dropdown  | ✅      | Platform-dependent with 8 tech combos     |
 | Tech badges          | ✅      | Visual component breakdown with icons     |
+| Bugs enhancement tab | ✅      | Dedicated bug report prompt generator     |
 | 7 section titles     | ✅      | Auto-generated with emoji + copy buttons  |
 | US prefix stripping  | ✅      | Regex-based removal in title cleaner      |
 
@@ -256,7 +274,12 @@ Per enterprise QA requirements:
 
 ## 🔄 Version History
 
-### v2.0 (Current) — Enterprise Edition
+### v2.1 (Current) — Enterprise Edition
+- Added Bugs Enhancement Prompt tab with bug report generator
+- Added bug prompt template with structured sections and rules
+- Added bug prompt inputs and copy feedback
+
+### v2.0 — Enterprise Edition
 - Added intelligent technology stack dropdown with platform-dependent mapping
 - Added visual tech component badges (Frontend, Backend, Database)
 - Set default to Web + Angular-Laravel-MySQL

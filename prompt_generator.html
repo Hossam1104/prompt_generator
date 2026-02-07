@@ -138,6 +138,14 @@
             box-shadow: var(--shadow-lg);
         }
 
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -489,57 +497,140 @@
         </header>
 
         <div class="tabs">
-            <div class="tab active">Test Scenarios Generation</div>
+            <div class="tab active" data-tab="test" onclick="switchTab('test')">Test Scenarios Generation</div>
+            <div class="tab" data-tab="bugs" onclick="switchTab('bugs')">Bugs Enhancement Prompt</div>
         </div>
 
         <div class="content">
-            <div id="input-form">
+            <div class="tab-panel active" id="tab-test">
+                <div id="input-form">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="platform">Target Platform</label>
+                            <select id="platform" onchange="updateTechStack()">
+                                <option value="">Select Platform...</option>
+                                <option value="Web" selected>🌐 Web</option>
+                                <option value="Mobile">📱 Mobile</option>
+                                <option value="Desktop">🖥️ Desktop</option>
+                                <option value="APIs">⚙️ APIs</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tech-stack">Technology Stack</label>
+                            <select id="tech-stack" onchange="updateTechBadges()">
+                                <option value="">Select Technology...</option>
+                            </select>
+                            <div class="tech-stack-badges" id="tech-badges"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="test-count">Total Test Case Count (Global)</label>
+                            <input type="number" id="test-count" placeholder="e.g. 10">
+                            <div class="note">Minimum required test cases per section.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="story-title">Story Title</label>
+                            <input type="text" id="story-title" placeholder="e.g. US - User Login Authentication">
+                            <div class="note">The "US" prefix will be automatically removed for section titles.</div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="story-desc">Story Description</label>
+                            <textarea id="story-desc" placeholder="Enter the full user story description..."></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="business-rules">Additional Business Rules / Notes</label>
+                            <textarea id="business-rules"
+                                placeholder="Enter any specific business rules or constraints..."></textarea>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn btn-generate" onclick="generatePrompt()">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                </svg>
+                                Generate Prompt
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="titles-section" id="titles-section">
+                    <div class="divider"></div>
+                    <div class="titles-section-header">
+                        <h3>Section Titles</h3>
+                        <span class="output-badge">Copy & Paste</span>
+                    </div>
+                    <div class="title-chips" id="title-chips"></div>
+                </div>
+
+                <div class="output-section" id="output-section">
+                    <div class="divider"></div>
+                    <div class="output-header">
+                        <h3>Generated Prompt</h3>
+                        <span class="output-badge">Ready</span>
+                    </div>
+                    <textarea id="output-textarea" readonly></textarea>
+                    <button class="btn btn-copy" onclick="copyToClipboard()">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        Copy Prompt
+                    </button>
+                    <div class="copy-feedback" id="copy-feedback">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Copied to clipboard
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-panel" id="tab-bugs">
                 <div class="form-grid">
-
                     <div class="form-group">
-                        <label for="platform">Target Platform</label>
-                        <select id="platform" onchange="updateTechStack()">
-                            <option value="">Select Platform...</option>
-                            <option value="Web" selected>🌐 Web</option>
-                            <option value="Mobile">📱 Mobile</option>
-                            <option value="Desktop">🖥️ Desktop</option>
-                            <option value="APIs">⚙️ APIs</option>
-                        </select>
+                        <label for="bug-title">Bug Title</label>
+                        <input type="text" id="bug-title"
+                            placeholder="e.g. Login form blocks valid users after timeout">
                     </div>
 
-                    <div class="form-group">
-                        <label for="tech-stack">Technology Stack</label>
-                        <select id="tech-stack" onchange="updateTechBadges()">
-                            <option value="">Select Technology...</option>
-                        </select>
-                        <div class="tech-stack-badges" id="tech-badges"></div>
-                    </div>
+                    <!-- <div class="form-group full-width">
+                        <label for="bug-summary">Bug Description / Summary</label>
+                        <textarea id="bug-summary" placeholder="Summarize the bug context and behavior..."></textarea>
+                    </div> -->
 
-                    <div class="form-group">
-                        <label for="test-count">Total Test Case Count (Global)</label>
-                        <input type="number" id="test-count" placeholder="e.g. 10">
-                        <div class="note">Minimum required test cases per section.</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="story-title">Story Title</label>
-                        <input type="text" id="story-title" placeholder="e.g. US - User Login Authentication">
-                        <div class="note">The "US" prefix will be automatically removed for section titles.</div>
+                    <div class="form-group full-width">
+                        <label for="bug-preconditions">Preconditions</label>
+                        <textarea id="bug-preconditions"
+                            placeholder="List required state, data, or environment..."></textarea>
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="story-desc">Story Description</label>
-                        <textarea id="story-desc" placeholder="Enter the full user story description..."></textarea>
+                        <label for="bug-steps">Steps to Reproduce</label>
+                        <textarea id="bug-steps" placeholder="Provide the exact steps to reproduce..."></textarea>
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="business-rules">Additional Business Rules / Notes</label>
-                        <textarea id="business-rules"
-                            placeholder="Enter any specific business rules or constraints..."></textarea>
+                        <label for="bug-expected">Expected Result</label>
+                        <textarea id="bug-expected" placeholder="Describe the correct behavior..."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="bug-actual">Actual Result</label>
+                        <textarea id="bug-actual" placeholder="Describe the observed behavior..."></textarea>
                     </div>
 
                     <div class="btn-row">
-                        <button class="btn btn-generate" onclick="generatePrompt()">
+                        <button class="btn btn-generate" onclick="generateBugPrompt()">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
@@ -547,40 +638,30 @@
                             Generate Prompt
                         </button>
                     </div>
-
                 </div>
-            </div>
 
-            <div class="titles-section" id="titles-section">
-                <div class="divider"></div>
-                <div class="titles-section-header">
-                    <h3>Section Titles</h3>
-                    <span class="output-badge">Copy & Paste</span>
-                </div>
-                <div class="title-chips" id="title-chips"></div>
-            </div>
-
-            <div class="output-section" id="output-section">
-                <div class="divider"></div>
-                <div class="output-header">
-                    <h3>Generated Prompt</h3>
-                    <span class="output-badge">Ready</span>
-                </div>
-                <textarea id="output-textarea" readonly></textarea>
-                <button class="btn btn-copy" onclick="copyToClipboard()">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                    </svg>
-                    Copy Prompt
-                </button>
-                <div class="copy-feedback" id="copy-feedback">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    Copied to clipboard
+                <div class="output-section" id="bug-output-section">
+                    <div class="divider"></div>
+                    <div class="output-header">
+                        <h3>Generated Prompt</h3>
+                        <span class="output-badge">Ready</span>
+                    </div>
+                    <textarea id="bug-output-textarea" readonly></textarea>
+                    <button class="btn btn-copy" onclick="copyBugPrompt()">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        Copy Prompt
+                    </button>
+                    <div class="copy-feedback" id="bug-copy-feedback">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Copied to clipboard
+                    </div>
                 </div>
             </div>
         </div>
@@ -677,6 +758,30 @@
         function cleanStoryTitle(raw) {
             var cleaned = raw.replace(/^US\s*[-��:]?\s*/i, '').trim();
             return cleaned;
+        }
+
+        function switchTab(tabName) {
+            var tabs = document.querySelectorAll('.tab');
+            var panels = document.querySelectorAll('.tab-panel');
+
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            for (var j = 0; j < panels.length; j++) {
+                panels[j].classList.remove('active');
+            }
+
+            var activeTab = document.querySelector('.tab[data-tab="' + tabName + '"]');
+            var activePanel = document.getElementById('tab-' + tabName);
+
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+
+            if (activePanel) {
+                activePanel.classList.add('active');
+            }
         }
 
         function generatePrompt() {
@@ -799,6 +904,101 @@
             }
 
             var feedback = document.getElementById('copy-feedback');
+            feedback.classList.add('visible');
+            setTimeout(function () {
+                feedback.classList.remove('visible');
+            }, 2200);
+        }
+
+        function generateBugPrompt() {
+            var bugTitle = document.getElementById('bug-title').value.trim();
+            var bugSummary = document.getElementById('bug-summary').value.trim();
+            var bugPreconditions = document.getElementById('bug-preconditions').value.trim();
+            var bugSteps = document.getElementById('bug-steps').value.trim();
+            var bugExpected = document.getElementById('bug-expected').value.trim();
+            var bugActual = document.getElementById('bug-actual').value.trim();
+
+            var template = 'Act as a Senior / Principal Software QA Engineer in a large-scale, production-grade enterprise environment.\n\n' +
+                'Your task is to generate a complete, professional bug report using the exact structure, tone, and level of detail defined below.\n\n' +
+                'GENERAL RULES:\n' +
+                '- Use clear, neutral, non-blaming language\n' +
+                '- Be precise and implementation-agnostic\n' +
+                '- Assume the audience includes developers, product owners, and QA leads\n' +
+                '- Focus on user impact, UX correctness, and business logic\n' +
+                '- Do NOT invent features \u2014 only formalize the described behavior\n' +
+                '- Fix any grammar or wording issues implicitly\n\n' +
+                'BUG REPORT STRUCTURE (MANDATORY):\n\n' +
+                '\uD83D\uDC1E Bug Title\n' +
+                '- Concise, action-oriented, and searchable\n' +
+                '- Clearly describe the incorrect behavior and condition\n\n' +
+                '\uD83D\uDCCC Preconditions\n' +
+                '- Bullet points\n' +
+                '- Only include required environmental or user state assumptions\n\n' +
+                '\uD83D\uDD01 Steps to Reproduce\n' +
+                '- Numbered steps\n' +
+                '- Clear, minimal, and deterministic\n' +
+                '- No ambiguity or extra commentary\n\n' +
+                '\u2705 Expected Result\n' +
+                '- Describe correct system behavior\n' +
+                '- Include UX, system logic, and user flow expectations\n' +
+                '- Explicitly mention when validation SHOULD or SHOULD NOT occur\n' +
+                '- Add a short rationale if it clarifies business intent\n\n' +
+                '\u274C Actual Result\n' +
+                '- Describe the observed incorrect behavior\n' +
+                '- Include system feedback (toasts, errors, blocks, messages)\n' +
+                '- Avoid interpretation \u2014 state facts\n\n' +
+                '\u26A0\uFE0F Impact\n' +
+                '- Bullet points\n' +
+                '- Focus on:\n' +
+                '  - User experience\n' +
+                '  - Business impact\n' +
+                '  - Conversion / onboarding risks\n' +
+                '  - UX consistency\n\n' +
+                '\uD83E\uDDE0 Notes / Observations\n' +
+                '- Technical or UX insights\n' +
+                '- Timing or flow issues\n' +
+                '- Copy or message defects\n' +
+                '- Root-cause hints (without blaming)\n\n' +
+                '\uD83E\uDDE9 Recommendation\n' +
+                '- Clear, actionable improvement proposals\n' +
+                '- Align validation timing with business logic\n' +
+                '- Include UX and system behavior adjustments\n' +
+                '- Use bullet points\n\n' +
+                'OUTPUT RULES:\n' +
+                '- Return ONLY the completed bug report\n' +
+                '- Follow the exact section order and emoji headers\n' +
+                '- No extra explanations\n' +
+                '- No meta commentary\n\n' +
+                'INPUTS (FROM USER):\n' +
+                'Bug Title: ' + bugTitle + '\n' +
+                'Bug Description / Summary:\n' + bugSummary + '\n\n' +
+                'Preconditions:\n' + bugPreconditions + '\n\n' +
+                'Steps to Reproduce:\n' + bugSteps + '\n\n' +
+                'Expected Result:\n' + bugExpected + '\n\n' +
+                'Actual Result:\n' + bugActual;
+
+            document.getElementById('bug-output-textarea').value = template;
+            document.getElementById('bug-output-section').style.display = 'block';
+            document.getElementById('bug-output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function copyBugPrompt() {
+            var textarea = document.getElementById('bug-output-textarea');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+
+            var success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (e) {
+                success = false;
+            }
+
+            if (!success) {
+                navigator.clipboard.writeText(textarea.value).catch(function () { });
+            }
+
+            var feedback = document.getElementById('bug-copy-feedback');
             feedback.classList.add('visible');
             setTimeout(function () {
                 feedback.classList.remove('visible');
