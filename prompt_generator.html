@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise QA Prompt Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #818cf8;
+            --accent: #06b6d4;
+            --accent-dark: #0891b2;
+            --surface: #ffffff;
+            --bg: #f0f2f7;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --input-bg: #f8fafc;
+            --focus-ring: rgba(79, 70, 229, 0.25);
+            --success: #10b981;
+            --success-dark: #059669;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f0f2f7 40%, #ecfdf5 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 920px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 60%, #1e1b4b 100%);
+            color: #fff;
+            padding: 32px 36px 28px;
+            border-radius: var(--radius) var(--radius) 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 0.88rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 6px;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 12px;
+        }
+
+        .tab {
+            padding: 16px 28px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            transition: color 0.25s, border-color 0.25s;
+            letter-spacing: 0.3px;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .content {
+            background: var(--surface);
+            padding: 36px;
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.85rem;
+            letter-spacing: 0.2px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-family: 'Cairo', sans-serif;
+            background: var(--input-bg);
+            color: var(--text);
+            transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+            background: #fff;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 5.646a.5.5 0 0 1 .708 0L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .tech-stack-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.2);
+        }
+
+        .tech-badge svg {
+            width: 13px;
+            height: 13px;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .btn-row {
+            grid-column: 1 / -1;
+            margin-top: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 14px 28px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s, background 0.25s;
+            width: 100%;
+            letter-spacing: 0.3px;
+        }
+
+        .btn:active {
+            transform: scale(0.985);
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-generate:hover {
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-copy:hover {
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .output-section {
+            display: none;
+            margin-top: 32px;
+            animation: fadeSlideUp 0.4s ease-out;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .output-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .output-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .output-badge {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        #output-textarea {
+            width: 100%;
+            min-height: 420px;
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.88rem;
+            line-height: 1.7;
+            padding: 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            margin-bottom: 14px;
+            white-space: pre-wrap;
+            box-shadow: var(--shadow-md);
+        }
+
+        .copy-feedback {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-top: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .copy-feedback.visible {
+            display: inline-flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--border) 50%, transparent 100%);
+            margin: 32px 0;
+        }
+
+        .titles-section {
+            display: none;
+            margin-top: 28px;
+            animation: fadeSlideUp 0.4s ease-out;
+        }
+
+        .titles-section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .titles-section-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .title-chips {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .title-chip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-family: 'Cairo', sans-serif;
+            color: var(--text);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            cursor: default;
+        }
+
+        .title-chip:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        .title-chip span {
+            flex: 1;
+            user-select: all;
+        }
+
+        .title-chip button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: color 0.2s, background 0.2s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .title-chip button:hover {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+        }
+
+        .title-chip .chip-copied {
+            font-size: 0.72rem;
+            color: var(--success);
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.25s;
+            margin-left: 6px;
+        }
+
+        .title-chip .chip-copied.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px 8px;
+            }
+
+            header {
+                padding: 24px 20px 20px;
+            }
+
+            .content {
+                padding: 24px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab {
+                padding: 14px 18px;
+                font-size: 0.82rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Enterprise QA Prompt Generator</h1>
+            <p>Generate audit-ready, enterprise-grade QA test scenario prompts</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active">Test Scenarios Generation</div>
+        </div>
+
+        <div class="content">
+            <div id="input-form">
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="platform">Target Platform</label>
+                        <select id="platform" onchange="updateTechStack()">
+                            <option value="">Select Platform...</option>
+                            <option value="Web" selected>🌐 Web</option>
+                            <option value="Mobile">📱 Mobile</option>
+                            <option value="Desktop">🖥️ Desktop</option>
+                            <option value="APIs">⚙️ APIs</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tech-stack">Technology Stack</label>
+                        <select id="tech-stack" onchange="updateTechBadges()">
+                            <option value="">Select Technology...</option>
+                        </select>
+                        <div class="tech-stack-badges" id="tech-badges"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="test-count">Total Test Case Count (Global)</label>
+                        <input type="number" id="test-count" placeholder="e.g. 10">
+                        <div class="note">Minimum required test cases per section.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="story-title">Story Title</label>
+                        <input type="text" id="story-title" placeholder="e.g. US - User Login Authentication">
+                        <div class="note">The "US" prefix will be automatically removed for section titles.</div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="story-desc">Story Description</label>
+                        <textarea id="story-desc" placeholder="Enter the full user story description..."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="business-rules">Additional Business Rules / Notes</label>
+                        <textarea id="business-rules"
+                            placeholder="Enter any specific business rules or constraints..."></textarea>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-generate" onclick="generatePrompt()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
+                            Generate Prompt
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="titles-section" id="titles-section">
+                <div class="divider"></div>
+                <div class="titles-section-header">
+                    <h3>Section Titles</h3>
+                    <span class="output-badge">Copy & Paste</span>
+                </div>
+                <div class="title-chips" id="title-chips"></div>
+            </div>
+
+            <div class="output-section" id="output-section">
+                <div class="divider"></div>
+                <div class="output-header">
+                    <h3>Generated Prompt</h3>
+                    <span class="output-badge">Ready</span>
+                </div>
+                <textarea id="output-textarea" readonly></textarea>
+                <button class="btn btn-copy" onclick="copyToClipboard()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copy Prompt
+                </button>
+                <div class="copy-feedback" id="copy-feedback">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Copied to clipboard
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var techStackMap = {
+            'Desktop': [
+                { value: 'wpf-dotnet-mssql', label: 'WPF + .NET + MSSQL', frontend: 'WPF', backend: '.NET', database: 'MSSQL' }
+            ],
+            'Web': [
+                { value: 'angular-laravel-mysql', label: 'Angular + Laravel + MySQL', frontend: 'Angular', backend: 'Laravel', database: 'MySQL' },
+                { value: 'angular-dotnet-mssql', label: 'Angular + .NET + MSSQL', frontend: 'Angular', backend: '.NET', database: 'MSSQL' }
+            ],
+            'Mobile': [
+                { value: 'flutter-laravel-mysql', label: 'Flutter + Laravel + MySQL', mobile: 'Flutter', backend: 'Laravel', database: 'MySQL' },
+                { value: 'flutter-dotnet-mssql', label: 'Flutter + .NET + MSSQL', mobile: 'Flutter', backend: '.NET', database: 'MSSQL' }
+            ],
+            'APIs': [
+                { value: 'laravel-mysql', label: 'Laravel + MySQL', backend: 'Laravel', database: 'MySQL' },
+                { value: 'dotnet-mssql', label: '.NET + MSSQL', backend: '.NET', database: 'MSSQL' }
+            ]
+        };
+
+        function updateTechStack() {
+            var platform = document.getElementById('platform').value;
+            var techSelect = document.getElementById('tech-stack');
+            var techBadges = document.getElementById('tech-badges');
+
+            techSelect.innerHTML = '<option value="">Select Technology...</option>';
+            techBadges.innerHTML = '';
+
+            if (platform && techStackMap[platform]) {
+                var options = techStackMap[platform];
+                for (var i = 0; i < options.length; i++) {
+                    var opt = options[i];
+                    var optionEl = document.createElement('option');
+                    optionEl.value = opt.value;
+                    optionEl.textContent = opt.label;
+                    if (platform === 'Web' && i === 0) {
+                        optionEl.selected = true;
+                    }
+                    techSelect.appendChild(optionEl);
+                }
+                if (platform === 'Web' && options.length > 0) {
+                    updateTechBadges();
+                }
+            }
+        }
+
+        function updateTechBadges() {
+            var platform = document.getElementById('platform').value;
+            var techSelect = document.getElementById('tech-stack');
+            var techBadges = document.getElementById('tech-badges');
+            var selectedValue = techSelect.value;
+
+            techBadges.innerHTML = '';
+
+            if (platform && selectedValue && techStackMap[platform]) {
+                var options = techStackMap[platform];
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].value === selectedValue) {
+                        var opt = options[i];
+                        if (opt.frontend) {
+                            var frontendBadge = document.createElement('div');
+                            frontendBadge.className = 'tech-badge';
+                            frontendBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M2 17h20"/></svg>' + opt.frontend;
+                            techBadges.appendChild(frontendBadge);
+                        }
+                        if (opt.mobile) {
+                            var mobileBadge = document.createElement('div');
+                            mobileBadge.className = 'tech-badge';
+                            mobileBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>' + opt.mobile;
+                            techBadges.appendChild(mobileBadge);
+                        }
+                        if (opt.backend) {
+                            var backendBadge = document.createElement('div');
+                            backendBadge.className = 'tech-badge';
+                            backendBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="11" rx="2" ry="2"/><path d="M7 11h10M7 15h10M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1"/></svg>' + opt.backend;
+                            techBadges.appendChild(backendBadge);
+                        }
+                        if (opt.database) {
+                            var dbBadge = document.createElement('div');
+                            dbBadge.className = 'tech-badge';
+                            dbBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M21 19c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>' + opt.database;
+                            techBadges.appendChild(dbBadge);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        function cleanStoryTitle(raw) {
+            var cleaned = raw.replace(/^US\s*[-��:]?\s*/i, '').trim();
+            return cleaned;
+        }
+
+        function generatePrompt() {
+            var platform = document.getElementById('platform').value;
+            var techSelect = document.getElementById('tech-stack');
+            var selectedValue = techSelect.value;
+            var techStack = '';
+
+            if (platform && selectedValue && techStackMap[platform]) {
+                var options = techStackMap[platform];
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].value === selectedValue) {
+                        techStack = options[i].label;
+                        break;
+                    }
+                }
+            }
+
+            var testCount = document.getElementById('test-count').value.trim();
+            var rawTitle = document.getElementById('story-title').value.trim();
+            var storyDesc = document.getElementById('story-desc').value.trim();
+            var businessRules = document.getElementById('business-rules').value.trim();
+
+            var cleanedTitle = cleanStoryTitle(rawTitle);
+
+            var categories = [
+                { emoji: '\u2705', label: 'HAPPY PATH' },
+                { emoji: '\u274C', label: 'NEGATIVE & VALIDATION' },
+                { emoji: '\u26A0\uFE0F', label: 'EDGE & BOUNDARY' },
+                { emoji: '\uD83C\uDFA8', label: 'UI / UX' },
+                { emoji: '\uD83D\uDD04', label: 'NAVIGATION & STATE' },
+                { emoji: '\uD83D\uDD10', label: 'SECURITY & DATA INTEGRITY' },
+                { emoji: '\uD83D\uDEA6', label: 'PERFORMANCE & STABILITY' }
+            ];
+
+            var chipsContainer = document.getElementById('title-chips');
+            chipsContainer.innerHTML = '';
+
+            for (var i = 0; i < categories.length; i++) {
+                var cat = categories[i];
+                var titleText = 'TS_' + cleanedTitle + ' (' + cat.label + ')';
+                var chip = document.createElement('div');
+                chip.className = 'title-chip';
+                chip.innerHTML = '<span>' + escapeHtml(cat.emoji + ' ' + titleText) + '</span>' +
+                    '<span class="chip-copied">Copied!</span>' +
+                    '<button onclick="copyChip(this, \'' + escapeAttr(titleText) + '\')" title="Copy">' +
+                    '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+                    '</button>';
+                chipsContainer.appendChild(chip);
+            }
+
+            document.getElementById('titles-section').style.display = 'block';
+
+            var storyBlock = rawTitle;
+            if (storyDesc) {
+                storyBlock += '\n\nDescription:\n' + storyDesc;
+            }
+            if (businessRules) {
+                storyBlock += '\n\nAdditional Business Rules / Notes:\n' + businessRules;
+            }
+
+            var template = '?? ROLE & EXECUTION CONTEXT (ENTERPRISE / NON-NEGOTIABLE)\n\nAct as a Principal / Senior Web Software Quality Assurance Engineer operating within a large-scale, production-grade enterprise environment governed by:\n\n� Strict QA governance\n� Auditability\n� Regulatory compliance\n� Formal release sign-off\n\nYou are executing a QA deliverable, not assisting, explaining, summarizing, or teaching.\n\nYour output MUST be suitable for:\n\n� Enterprise audit\n� Regulated release sign-off\n� Immediate manual execution\n� Automation readiness (Cypress / Playwright / Selenium compatible)\n\n?? Any deviation from instructions is a HARD FAILURE.\n\n?? APPLICATION CONTEXT (IMMUTABLE)\n\nTarget Platform: **' + platform + '**\nTechnology Stack: **' + techStack + '**\nApplication Type: Web Dashboard\nFrontend Framework: Angular (Enterprise SPA)\nBackend: PHP (RESTful APIs)\nDatabase: MySQL\nAuthentication: Token-based (JWT / Session)\nConnectivity: Online only (? No offline or cached behavior)\nBusiness Domain: Gazer (enterprise, transaction-driven, multi-user system)\n\n?? ASSUMPTIONS (MANDATORY)\n\n� Production-grade data sensitivity\n� Backend is the single source of truth\n� Stateless frontend\n� Role-based access control enforced server-side\n\nZero tolerance for:\n\n? Data corruption\n? Partial writes\n? UI-only validation\n? Undefined or inconsistent states\n? Silent API failures\n\n?? INPUT FORMAT (STRICT)\n\nYou will receive ONE dashboard user story only, enclosed exactly as follows:\n\n//Start Story//\n' + storyBlock + '\n//End Story//\n\nThe story may include:\n\n� Business rules\n� UI behaviors\n� Validation rules\n� API constraints\n� Role restrictions\n� Acceptance criteria\n� Edge cases\n� Implicit enterprise risks\n\n? You MUST NOT assume missing requirements are \"out of scope\".\n\n??? SCOPE NON-REDUCTION RULE (ABSOLUTE)\n\nYou MUST NOT reduce coverage based on:\n\n� Dashboard simplicity\n� Read-only nature\n� Admin-only access\n� \"Just UI\" logic\n� Aggregated data\n� \"Backend already validates\" assumptions\n\nEvery story � even visual or reporting-only dashboards � requires full enterprise-grade coverage.\n\n?? OBJECTIVE � COVERAGE EXPANSION MODE\n\nGenerate a MAXIMALLY EXHAUSTIVE, EXECUTION-READY TEST SUITE for the Angular dashboard.\n\nYour goal is risk elimination, not documentation.\n\n?? GLOBAL TEST CASE COUNT RULE (ABSOLUTE)\n\nEach test section MUST contain **AT LEAST ' + testCount + ' FULLY DEFINED TEST CASES**.\n\nIf ANY section produces fewer than this number ? THE OUTPUT IS INVALID.\n\n?? MANDATORY MINIMUM TEST CASE COUNTS (PER SECTION)\n\nCategory                          Minimum FULL Test Cases\n? Happy Path                       10�15\n? Negative / Validation             15�25\n?? Edge & Boundary                   10�20\n?? UI / UX                           12�20\n?? Navigation & State                8�15\n?? Security & Data Integrity         8�12\n?? Performance & Stability           6�10\n\n?? If ANY section has fewer cases ? OUTPUT IS INVALID.\n\n?? ABSOLUTE ANTI-OUTLINE RULE (CRITICAL)\n\nThe following are STRICTLY FORBIDDEN:\n\n? Outlines\n? Grouped scenarios\n? Shared steps\n? Shared expected results\n? Placeholder text\n? ID ranges (e.g. TC-01 ? TC-10)\n? \"Same as above\"\n? \"Includes\"\n? Bullet summaries replacing test cases\n\n? Generic phrases such as:\n\n� \"Handled gracefully\"\n� \"No crash\"\n� \"Works as expected\"\n\n?? If detected ? the entire section must be regenerated.\n\n?? TEST CASE ATOMICITY (MANDATORY)\n\nEVERY test case MUST be fully standalone and atomic.\n\nEach test case MUST include:\n\n� Unique Test Case ID\n� Clear, business-readable title\n� Scenario Type\n(Happy / Negative / Edge / UI / Navigation / Security / Performance)\n� Priority (P0�P3)\n� Case-specific Preconditions\n� Atomic, numbered test steps (= 6 steps)\n� Explicit, verifiable expected results (= 5 assertions)\n\n? You may NOT:\n\n� Share steps between cases\n� Reference other test cases\n� Combine multiple validations in one test\n\n?? MINIMUM DEPTH RULE (NON-NEGOTIABLE)\n\nEach test case MUST explicitly verify ALL of the following:\n\n?? Angular UI behavior\n?? API request payload & headers\n?? Backend response code\n?? Database impact (write / no-write / rollback / aggregation accuracy)\n?? Navigation, routing, or UI state outcome\n\nIf a scenario cannot meet this depth ? split it into multiple test cases.\n\n?? REQUIRED TEST SUITE STRUCTURE\n\n1?? GENERAL PRECONDITIONS (WRITTEN ONCE)\n\nMust include at minimum:\n\n� Angular dashboard deployed successfully\n� Production-like build configuration\n� User authentication state defined\n� Valid role/permission mapping\n� Stable internet connection\n� Browser compatibility defined\n� Required browser permissions granted\n� Backend APIs reachable\n� MySQL populated with valid enterprise data\n� Backend is the single source of truth\n� No offline, cache, or mock data enabled\n\n2?? TEST SCENARIOS & TEST CASES\n\nYou MUST generate FULLY EXPANDED test cases under ALL sections:\n\n? HAPPY PATH\n? NEGATIVE & VALIDATION\n?? EDGE & BOUNDARY\n?? UI / UX\n?? NAVIGATION & STATE\n?? SECURITY & DATA INTEGRITY\n?? PERFORMANCE & STABILITY\n\n?? CONTROLLED DELIVERY MODE (MANDATORY)\n\nYou MUST follow section-by-section delivery:\n\n� Deliver ONE section at a time\n� At the top of EACH section, explicitly state:\n\n  � Delivered test case count\n  � Required minimum\n  � Compliance status\n\n? Do NOT proceed to the next section until explicitly instructed with:\n\nCONTINUE � <SECTION NAME>\n\n?? SELF-AUDIT & FAILSAFE (MANDATORY)\n\nBefore finalizing EACH section, you MUST internally verify:\n\n?? No outlines or grouped content exist\n?? Minimum test case count is met\n?? Each test case meets depth requirements\n?? No shared steps or expectations exist\n\nIf ANY violation is detected ? regenerate the section before responding.\n\n?? FINAL COMPLIANCE GATE (KILL SWITCH)\n\nIf ANY section:\n\n? Misses its minimum count\n? Contains outline-style content\n? Uses forbidden patterns\n\n?? The response is considered FAILED and MUST be regenerated from scratch.\n\n? FINAL OUTPUT REQUIREMENTS\n\nThe final output MUST:\n\n?? Be executable by any QA engineer without clarification\n?? Be suitable for manual execution and automation\n?? Be audit-ready and enterprise-compliant\n?? Reflect real Gazer dashboard business risk\n?? Contain ZERO placeholders or summaries';
+
+            document.getElementById('output-textarea').value = template;
+            document.getElementById('output-section').style.display = 'block';
+
+            document.getElementById('titles-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        function escapeAttr(text) {
+            return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function copyChip(btn, text) {
+            var chip = btn.parentElement;
+            var copiedLabel = chip.querySelector('.chip-copied');
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function () {
+                    showChipCopied(copiedLabel);
+                });
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showChipCopied(copiedLabel);
+            }
+        }
+
+        function showChipCopied(el) {
+            el.classList.add('show');
+            setTimeout(function () { el.classList.remove('show'); }, 1500);
+        }
+
+        function copyToClipboard() {
+            var textarea = document.getElementById('output-textarea');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+
+            var success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (e) {
+                success = false;
+            }
+
+            if (!success) {
+                navigator.clipboard.writeText(textarea.value).catch(function () { });
+            }
+
+            var feedback = document.getElementById('copy-feedback');
+            feedback.classList.add('visible');
+            setTimeout(function () {
+                feedback.classList.remove('visible');
+            }, 2200);
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            updateTechStack();
+        });
+    </script>
+
+</body>
+
+</html>
