@@ -5,366 +5,486 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise QA Prompt Generator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         :root {
             --primary: #4f46e5;
             --primary-dark: #3730a3;
-            --primary-light: #818cf8;
             --accent: #06b6d4;
-            --accent-dark: #0891b2;
-            --surface: #ffffff;
-            --bg: #f0f2f7;
-            --bg-card: #ffffff;
-            --text: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --input-bg: #f8fafc;
-            --focus-ring: rgba(79, 70, 229, 0.25);
             --success: #10b981;
-            --success-dark: #059669;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
-            --radius: 12px;
-            --radius-sm: 8px;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
-            font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #e0e7ff 0%, #f0f2f7 40%, #ecfdf5 100%);
-            color: var(--text);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            padding: 32px 16px;
+            align-items: center;
+            padding: 20px;
         }
 
-        .container {
+        .main-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
             width: 100%;
-            max-width: 920px;
+            max-width: 1000px;
             display: flex;
             flex-direction: column;
-            gap: 0;
+            max-height: 95vh;
+            margin: 0 auto;
         }
 
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 60%, #1e1b4b 100%);
-            color: #fff;
-            padding: 32px 36px 28px;
-            border-radius: var(--radius) var(--radius) 0 0;
-            position: relative;
-            overflow: hidden;
+        .header-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 16px 16px 0 0;
+            flex-shrink: 0;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: -40%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -5%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        header h1 {
-            font-size: 1.6rem;
+        .header-section h1 {
+            font-size: 1.5rem;
             font-weight: 800;
+            margin: 0;
             letter-spacing: 0.5px;
-            position: relative;
-            z-index: 1;
         }
 
-        header p {
-            font-size: 0.88rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 6px;
-            font-weight: 400;
-            position: relative;
-            z-index: 1;
+        .header-section p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            margin: 4px 0 0 0;
         }
 
-        .tabs {
-            display: flex;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 0 12px;
+        .content-section {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
         }
 
-        .tab {
-            padding: 16px 28px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.88rem;
-            color: var(--text-muted);
+        .nav-tabs {
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            border: none;
+            font-weight: 600;
+            padding: 12px 20px;
             border-bottom: 3px solid transparent;
-            transition: color 0.25s, border-color 0.25s;
-            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
         }
 
-        .tab:hover {
+        .nav-link:hover {
             color: var(--primary);
+            border-bottom-color: var(--accent);
         }
 
-        .tab.active {
+        .nav-link.active {
             color: var(--primary);
+            background: none !important;
             border-bottom-color: var(--primary);
         }
 
-        .content {
-            background: var(--surface);
-            padding: 36px;
-            border-radius: 0 0 var(--radius) var(--radius);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .tab-panel {
-            display: none;
-        }
-
-        .tab-panel.active {
-            display: block;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            display: block;
+        .form-label {
+            font-weight: 600;
+            color: #1e293b;
             margin-bottom: 8px;
-            font-weight: 700;
-            color: var(--text);
-            font-size: 0.85rem;
-            letter-spacing: 0.2px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 0.92rem;
-            font-family: 'Cairo', sans-serif;
-            background: var(--input-bg);
-            color: var(--text);
-            transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 4px var(--focus-ring);
-            background: #fff;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #94a3b8;
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 5.646a.5.5 0 0 1 .708 0L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 36px;
-        }
-
-        textarea {
-            min-height: 110px;
-            resize: vertical;
-        }
-
-        .note {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-            line-height: 1.4;
-        }
-
-        .tech-stack-badges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .tech-badge {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-            color: #fff;
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 5px 12px;
-            border-radius: 20px;
-            letter-spacing: 0.3px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.2);
-        }
-
-        .tech-badge svg {
-            width: 13px;
-            height: 13px;
-            stroke: currentColor;
-            fill: none;
-        }
-
-        .btn-row {
-            grid-column: 1 / -1;
-            margin-top: 8px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 700;
             font-size: 0.95rem;
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 14px 28px;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.2s, background 0.25s;
-            width: 100%;
-            letter-spacing: 0.3px;
         }
 
-        .btn:active {
-            transform: scale(0.985);
+        .form-control,
+        .form-select {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25);
         }
 
         .btn-generate {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .btn-generate:hover {
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            color: white;
         }
 
         .btn-copy {
-            background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+            background: var(--success);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .btn-copy:hover {
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            background: #059669;
+            transform: translateY(-1px);
+            color: white;
         }
 
-        .output-section {
-            display: none;
-            margin-top: 32px;
-            animation: fadeSlideUp 0.4s ease-out;
+        .btn-copy.copied {
+            background: #0f766e;
         }
 
-        @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--accent), #0891b2);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
         }
 
-        .output-header {
+        .tech-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .title-chip {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .title-chip:hover {
+            background: #ecf0f9;
+            border-color: var(--accent);
+        }
+
+        .chip-copy-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 4px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
+            transition: all 0.2s ease;
         }
 
-        .output-header h3 {
-            font-size: 1.05rem;
+        .chip-copy-btn:hover {
+            color: var(--primary);
+        }
+
+        .chip-copied {
+            display: none;
+            font-size: 0.8rem;
+            color: var(--success);
             font-weight: 700;
-            color: var(--text);
         }
 
-        .output-badge {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+        .chip-copied.show {
+            display: inline;
         }
 
-        #output-textarea {
-            width: 100%;
-            min-height: 420px;
-            background: #1e293b;
-            color: #e2e8f0;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.88rem;
-            line-height: 1.7;
-            padding: 20px;
+        .output-modal .modal-content {
+            border-radius: 12px;
             border: none;
-            border-radius: var(--radius-sm);
-            margin-bottom: 14px;
-            white-space: pre-wrap;
-            box-shadow: var(--shadow-md);
+        }
+
+        .output-modal .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .output-modal .modal-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .output-modal .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        #output-textarea,
+        #bug-output-textarea {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            min-height: 250px;
+            height: 320px;
+            background: #f8fafc;
+            color: #1e293b;
+            resize: none;
+            width: 100%;
+        }
+
+        #output-textarea:focus,
+        #bug-output-textarea:focus {
+            border-color: var(--accent);
+            background: white;
         }
 
         .copy-feedback {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--success);
-            margin-top: 10px;
-            animation: fadeIn 0.3s ease;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
         }
 
         .copy-feedback.visible {
-            display: inline-flex;
+            opacity: 1;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        #bugs-panel .row {
+            display: flex;
+            justify-content: center;
+        }
+
+        #bugs-panel .col-12 {
+            max-width: 100%;
+        }
+
+        #bugs-panel .form-section {
+            width: 100%;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        #bugs-panel .form-section h6 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-size: 1.1rem;
+        }
+
+        #bugs-panel .form-control,
+        #bugs-panel .form-select {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+        }
+
+        #bugs-panel .form-control:focus,
+        #bugs-panel .form-select:focus {
+            background: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.15);
+        }
+
+        #bugs-panel .btn-generate {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        #bugs-panel .form-section {
+            width: 100%;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        #bugs-panel .form-section h6 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-size: 1.1rem;
+        }
+
+        #bugs-panel .form-control,
+        #bugs-panel .form-select {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+        }
+
+        #bugs-panel .form-control:focus,
+        #bugs-panel .form-select:focus {
+            background: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.15);
+        }
+
+        #bugs-panel .col-12 {
+            max-width: 100%;
+        }
+
+        #bugs-panel .btn-generate {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        #bug-output-section {
+            width: 100%;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        #bug-output-section h6 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #bug-output-section .mb-3 {
+            margin-bottom: 20px;
+        }
+
+        #bug-output-section .btn {
+            margin-right: 10px;
+        }
+
+        /* max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+        } */
+
+        #bug-output-section h6 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #bug-output-section .mb-3 {
+            margin-bottom: 20px;
+        }
+
+        #bug-output-section .btn {
+            width: 48%;
+            display: inline-block;
+        }
+
+        #bug-output-section .btn-copy {
+            margin-right: 4%;
+        }
+
+        .form-section h6 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .category-badge {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .category-badge:hover {
+            border-color: var(--primary);
+            background: #f0f3ff;
+        }
+
+        .category-badge.selected {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .titles-container {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        .hidden-section.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                max-height: 100vh;
+            }
+
+            .content-section {
+                padding: 16px;
+            }
+
+            .header-section {
+                padding: 20px 16px;
+            }
+
+            .header-section h1 {
+                font-size: 1.25rem;
+            }
+
+            .nav-link {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .tab-content {
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -376,323 +496,243 @@
                 opacity: 1;
             }
         }
-
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent 0%, var(--border) 50%, transparent 100%);
-            margin: 32px 0;
-        }
-
-        .titles-section {
-            display: none;
-            margin-top: 28px;
-            animation: fadeSlideUp 0.4s ease-out;
-        }
-
-        .titles-section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .titles-section-header h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .title-chips {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .title-chip {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--input-bg);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            font-size: 0.88rem;
-            font-family: 'Cairo', sans-serif;
-            color: var(--text);
-            transition: border-color 0.2s, box-shadow 0.2s;
-            cursor: default;
-        }
-
-        .title-chip:hover {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px var(--focus-ring);
-        }
-
-        .title-chip span {
-            flex: 1;
-            user-select: all;
-        }
-
-        .title-chip button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            padding: 4px 6px;
-            border-radius: 4px;
-            transition: color 0.2s, background 0.2s;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .title-chip button:hover {
-            color: var(--primary);
-            background: rgba(79, 70, 229, 0.08);
-        }
-
-        .title-chip .chip-copied {
-            font-size: 0.72rem;
-            color: var(--success);
-            font-weight: 700;
-            opacity: 0;
-            transition: opacity 0.25s;
-            margin-left: 6px;
-        }
-
-        .title-chip .chip-copied.show {
-            opacity: 1;
-        }
-
-        @media (max-width: 640px) {
-            body {
-                padding: 16px 8px;
-            }
-
-            header {
-                padding: 24px 20px 20px;
-            }
-
-            .content {
-                padding: 24px 18px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tab {
-                padding: 14px 18px;
-                font-size: 0.82rem;
-            }
-        }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-        <header>
-            <h1>Enterprise QA Prompt Generator</h1>
-            <p>Generate audit-ready, enterprise-grade QA test scenario prompts</p>
-        </header>
-
-        <div class="tabs">
-            <div class="tab active" data-tab="test" onclick="switchTab('test')">Test Scenarios Generation</div>
-            <div class="tab" data-tab="bugs" onclick="switchTab('bugs')">Bugs Enhancement Prompt</div>
+    <div class="main-container">
+        <div class="header-section">
+            <h1><i class="bi bi-lightning-charge"></i> Enterprise QA Prompt Generator</h1>
+            <p>Generate enterprise-grade QA prompts for test scenarios and bug reports</p>
         </div>
 
-        <div class="content">
-            <div class="tab-panel active" id="tab-test">
-                <div id="input-form">
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="platform">Target Platform</label>
-                            <select id="platform" onchange="updateTechStack()">
-                                <option value="">Select Platform...</option>
-                                <option value="Web" selected>🌐 Web</option>
-                                <option value="Mobile">📱 Mobile</option>
-                                <option value="Desktop">🖥️ Desktop</option>
-                                <option value="APIs">⚙️ APIs</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tech-stack">Technology Stack</label>
-                            <select id="tech-stack" onchange="updateTechBadges()">
-                                <option value="">Select Technology...</option>
-                            </select>
-                            <div class="tech-stack-badges" id="tech-badges"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="test-count">Total Test Case Count (Global)</label>
-                            <input type="number" id="test-count" placeholder="e.g. 10">
-                            <div class="note">Minimum required test cases per section.</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="story-title">Story Title</label>
-                            <input type="text" id="story-title" placeholder="e.g. US - User Login Authentication">
-                            <div class="note">The "US" prefix will be automatically removed for section titles.</div>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="story-desc">Story Description</label>
-                            <textarea id="story-desc" placeholder="Enter the full user story description..."></textarea>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="business-rules">Additional Business Rules / Notes</label>
-                            <textarea id="business-rules"
-                                placeholder="Enter any specific business rules or constraints..."></textarea>
-                        </div>
-
-                        <div class="btn-row">
-                            <button class="btn btn-generate" onclick="generatePrompt()">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                                </svg>
-                                Generate Prompt
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="titles-section" id="titles-section">
-                    <div class="divider"></div>
-                    <div class="titles-section-header">
-                        <h3>Section Titles</h3>
-                        <span class="output-badge">Copy & Paste</span>
-                    </div>
-                    <div class="title-chips" id="title-chips"></div>
-                </div>
-
-                <div class="output-section" id="output-section">
-                    <div class="divider"></div>
-                    <div class="output-header">
-                        <h3>Generated Prompt</h3>
-                        <span class="output-badge">Ready</span>
-                    </div>
-                    <textarea id="output-textarea" readonly></textarea>
-                    <button class="btn btn-copy" onclick="copyToClipboard()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                        </svg>
-                        Copy Prompt
+        <div class="content-section">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="test-tab" data-bs-toggle="tab" data-bs-target="#test-panel"
+                        type="button" role="tab">
+                        <i class="bi bi-clipboard2-check"></i> Test Scenarios
                     </button>
-                    <div class="copy-feedback" id="copy-feedback">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Copied to clipboard
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bugs-tab" data-bs-toggle="tab" data-bs-target="#bugs-panel"
+                        type="button" role="tab">
+                        <i class="bi bi-bug"></i> Bugs Enhancement
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Test Scenarios Tab -->
+                <div class="tab-pane fade show active" id="test-panel" role="tabpanel">
+                    <div class="form-section">
+                        <h6><i class="bi bi-file-text"></i> Test Configuration</h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="platform" class="form-label">Target Platform</label>
+                                <select id="platform" class="form-select" onchange="updateTechStack()">
+                                    <option value="">Select Platform...</option>
+                                    <option value="Desktop">Desktop</option>
+                                    <option value="Web" selected>Web</option>
+                                    <option value="Mobile">Mobile</option>
+                                    <option value="APIs">APIs</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="tech-stack" class="form-label">Technology Stack</label>
+                                <select id="tech-stack" class="form-select" onchange="updateTechBadges()">
+                                    <option value="">Select Technology...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="test-count" class="form-label">Minimum Test Cases Per Section</label>
+                                <input type="number" id="test-count" class="form-control" placeholder="e.g., 15"
+                                    value="15">
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="story-title" class="form-label">Story Title</label>
+                                <input type="text" id="story-title" class="form-control"
+                                    placeholder="e.g., US-123: Dashboard Analytics">
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="story-desc" class="form-label">Story Description</label>
+                                <textarea id="story-desc" class="form-control" rows="3"
+                                    placeholder="Describe the feature..."></textarea>
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="business-rules" class="form-label">Business Rules & Notes</label>
+                                <textarea id="business-rules" class="form-control" rows="2"
+                                    placeholder="Add any business rules or constraints..."></textarea>
+                            </div>
+                        </div>
+
+                        <div id="tech-badges" class="mb-4"></div>
+
+                        <button class="btn btn-generate" onclick="generatePrompt()">
+                            <i class="bi bi-sparkles"></i> Generate Prompt
+                        </button>
                     </div>
-                </div>
-            </div>
 
-            <div class="tab-panel" id="tab-bugs">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="bug-title">Bug Title</label>
-                        <input type="text" id="bug-title"
-                            placeholder="e.g. Login form blocks valid users after timeout">
+                    <div id="titles-section" class="hidden-section mt-5">
+                        <h6><i class="bi bi-tags"></i> Section Titles (Copy as needed)</h6>
+                        <div id="title-chips" class="titles-container"></div>
                     </div>
 
-                    <!-- <div class="form-group full-width">
-                        <label for="bug-summary">Bug Description / Summary</label>
-                        <textarea id="bug-summary" placeholder="Summarize the bug context and behavior..."></textarea>
-                    </div> -->
-
-                    <div class="form-group full-width">
-                        <label for="bug-preconditions">Preconditions</label>
-                        <textarea id="bug-preconditions"
-                            placeholder="List required state, data, or environment..."></textarea>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="bug-steps">Steps to Reproduce</label>
-                        <textarea id="bug-steps" placeholder="Provide the exact steps to reproduce..."></textarea>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="bug-expected">Expected Result</label>
-                        <textarea id="bug-expected" placeholder="Describe the correct behavior..."></textarea>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="bug-actual">Actual Result</label>
-                        <textarea id="bug-actual" placeholder="Describe the observed behavior..."></textarea>
-                    </div>
-
-                    <div class="btn-row">
-                        <button class="btn btn-generate" onclick="generateBugPrompt()">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                            </svg>
-                            Generate Prompt
+                    <div id="output-section" class="hidden-section mt-5">
+                        <h6><i class="bi bi-file-earmark-text"></i> Generated Prompt</h6>
+                        <div class="mb-3">
+                            <textarea id="output-textarea" readonly></textarea>
+                        </div>
+                        <button class="btn btn-copy" onclick="copyToClipboard()">
+                            <i class="bi bi-clipboard"></i> Copy Prompt
+                        </button>
+                        <button class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#previewModal"
+                            style="background: #64748b; border: none;">
+                            <i class="bi bi-eye"></i> Preview
                         </button>
                     </div>
                 </div>
 
-                <div class="output-section" id="bug-output-section">
-                    <div class="divider"></div>
-                    <div class="output-header">
-                        <h3>Generated Prompt</h3>
-                        <span class="output-badge">Ready</span>
+                <!-- Bugs Tab -->
+                <div class="tab-pane fade" id="bugs-panel" role="tabpanel">
+                    <div class="form-section">
+                        <!-- <h6><i class="bi bi-exclamation-circle"></i> Bug Report Details</h6> -->
+
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <label for="bug-title" class="form-label">Bug Title</label>
+                                <input type="text" id="bug-title" class="form-control"
+                                    placeholder="Brief bug description...">
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="bug-preconditions" class="form-label">Preconditions</label>
+                                <textarea id="bug-preconditions" class="form-control" rows="2"
+                                    placeholder="Required state before reproducing..."></textarea>
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="bug-steps" class="form-label">Steps to Reproduce</label>
+                                <textarea id="bug-steps" class="form-control" rows="3"
+                                    placeholder="1. Step one&#10;2. Step two..."></textarea>
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="bug-expected" class="form-label">Expected Result</label>
+                                <textarea id="bug-expected" class="form-control" rows="2"
+                                    placeholder="What should happen..."></textarea>
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="bug-actual" class="form-label">Actual Result</label>
+                                <textarea id="bug-actual" class="form-control" rows="2"
+                                    placeholder="What actually happens..."></textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-generate" onclick="generateBugPrompt()">
+                            <i class="bi bi-sparkles"></i> Generate Bug Prompt
+                        </button>
                     </div>
-                    <textarea id="bug-output-textarea" readonly></textarea>
-                    <button class="btn btn-copy" onclick="copyBugPrompt()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                        </svg>
-                        Copy Prompt
-                    </button>
-                    <div class="copy-feedback" id="bug-copy-feedback">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        Copied to clipboard
+
+                    <div id="bug-output-section" class="hidden-section mt-5">
+                        <h6><i class="bi bi-file-earmark-text"></i> Generated Bug Report</h6>
+                        <div class="mb-3">
+                            <textarea id="bug-output-textarea" readonly></textarea>
+                        </div>
+                        <button class="btn btn-copy" onclick="copyBugPrompt()">
+                            <i class="bi bi-clipboard"></i> Copy Report
+                        </button>
+                        <button class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#bugPreviewModal"
+                            style="background: #64748b; border: none;">
+                            <i class="bi bi-eye"></i> Preview
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Preview Modal -->
+    <div class="modal output-modal fade" id="previewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Prompt Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="previewContent"
+                        style="font-family: 'Courier New', monospace; font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-copy" onclick="copyFromPreview()">
+                        <i class="bi bi-clipboard"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bug Preview Modal -->
+    <div class="modal output-modal fade" id="bugPreviewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bug Report Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="bugPreviewContent"
+                        style="font-family: 'Courier New', monospace; font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-copy" onclick="copyFromBugPreview()">
+                        <i class="bi bi-clipboard"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="copy-feedback" class="copy-feedback">
+        <i class="bi bi-check-circle"></i> Copied to clipboard!
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         var techStackMap = {
             'Desktop': [
-                { value: 'wpf-dotnet-mssql', label: 'WPF + .NET + MSSQL', frontend: 'WPF', backend: '.NET', database: 'MSSQL' }
+                { value: 'wpf-net', label: 'WPF + .NET Framework + MSSQL', frontend: 'WPF', backend: '.NET', database: 'MSSQL' }
             ],
             'Web': [
                 { value: 'angular-laravel-mysql', label: 'Angular + Laravel + MySQL', frontend: 'Angular', backend: 'Laravel', database: 'MySQL' },
-                { value: 'angular-dotnet-mssql', label: 'Angular + .NET + MSSQL', frontend: 'Angular', backend: '.NET', database: 'MSSQL' }
+                { value: 'angular-net-mssql', label: 'Angular + .NET Core + MSSQL', frontend: 'Angular', backend: '.NET Core', database: 'MSSQL' }
             ],
             'Mobile': [
-                { value: 'flutter-laravel-mysql', label: 'Flutter + Laravel + MySQL', mobile: 'Flutter', backend: 'Laravel', database: 'MySQL' },
-                { value: 'flutter-dotnet-mssql', label: 'Flutter + .NET + MSSQL', mobile: 'Flutter', backend: '.NET', database: 'MSSQL' }
+                { value: 'flutter-firebase', label: 'Flutter + Firebase', mobile: 'Flutter', backend: 'Firebase' },
+                { value: 'flutter-rest', label: 'Flutter + REST APIs + MySQL', mobile: 'Flutter', backend: 'REST', database: 'MySQL' }
             ],
             'APIs': [
-                { value: 'laravel-mysql', label: 'Laravel + MySQL', backend: 'Laravel', database: 'MySQL' },
-                { value: 'dotnet-mssql', label: '.NET + MSSQL', backend: '.NET', database: 'MSSQL' }
+                { value: 'net-api', label: '.NET Core REST API + MSSQL', backend: '.NET Core', database: 'MSSQL' },
+                { value: 'laravel-api', label: 'Laravel REST API + MySQL', backend: 'Laravel', database: 'MySQL' }
             ]
         };
 
         function updateTechStack() {
             var platform = document.getElementById('platform').value;
             var techSelect = document.getElementById('tech-stack');
-            var techBadges = document.getElementById('tech-badges');
-
             techSelect.innerHTML = '<option value="">Select Technology...</option>';
-            techBadges.innerHTML = '';
 
             if (platform && techStackMap[platform]) {
                 var options = techStackMap[platform];
@@ -712,6 +752,10 @@
             }
         }
 
+        function toggleCategory(element, category) {
+            element.classList.toggle('selected');
+        }
+
         function updateTechBadges() {
             var platform = document.getElementById('platform').value;
             var techSelect = document.getElementById('tech-stack');
@@ -726,28 +770,28 @@
                     if (options[i].value === selectedValue) {
                         var opt = options[i];
                         if (opt.frontend) {
-                            var frontendBadge = document.createElement('div');
-                            frontendBadge.className = 'tech-badge';
-                            frontendBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M2 17h20"/></svg>' + opt.frontend;
-                            techBadges.appendChild(frontendBadge);
+                            var badge = document.createElement('div');
+                            badge.className = 'tech-badge';
+                            badge.innerHTML = '<i class="bi bi-laptop"></i> ' + opt.frontend;
+                            techBadges.appendChild(badge);
                         }
                         if (opt.mobile) {
-                            var mobileBadge = document.createElement('div');
-                            mobileBadge.className = 'tech-badge';
-                            mobileBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>' + opt.mobile;
-                            techBadges.appendChild(mobileBadge);
+                            var badge = document.createElement('div');
+                            badge.className = 'tech-badge';
+                            badge.innerHTML = '<i class="bi bi-phone"></i> ' + opt.mobile;
+                            techBadges.appendChild(badge);
                         }
                         if (opt.backend) {
-                            var backendBadge = document.createElement('div');
-                            backendBadge.className = 'tech-badge';
-                            backendBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="11" rx="2" ry="2"/><path d="M7 11h10M7 15h10M3 6V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1"/></svg>' + opt.backend;
-                            techBadges.appendChild(backendBadge);
+                            var badge = document.createElement('div');
+                            badge.className = 'tech-badge';
+                            badge.innerHTML = '<i class="bi bi-server"></i> ' + opt.backend;
+                            techBadges.appendChild(badge);
                         }
                         if (opt.database) {
-                            var dbBadge = document.createElement('div');
-                            dbBadge.className = 'tech-badge';
-                            dbBadge.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M21 19c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>' + opt.database;
-                            techBadges.appendChild(dbBadge);
+                            var badge = document.createElement('div');
+                            badge.className = 'tech-badge';
+                            badge.innerHTML = '<i class="bi bi-database"></i> ' + opt.database;
+                            techBadges.appendChild(badge);
                         }
                         break;
                     }
@@ -756,32 +800,8 @@
         }
 
         function cleanStoryTitle(raw) {
-            var cleaned = raw.replace(/^US\s*[-��:]?\s*/i, '').trim();
+            var cleaned = raw.replace(/^US\s*[-–—:]?\s*/i, '').trim();
             return cleaned;
-        }
-
-        function switchTab(tabName) {
-            var tabs = document.querySelectorAll('.tab');
-            var panels = document.querySelectorAll('.tab-panel');
-
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-
-            for (var j = 0; j < panels.length; j++) {
-                panels[j].classList.remove('active');
-            }
-
-            var activeTab = document.querySelector('.tab[data-tab="' + tabName + '"]');
-            var activePanel = document.getElementById('tab-' + tabName);
-
-            if (activeTab) {
-                activeTab.classList.add('active');
-            }
-
-            if (activePanel) {
-                activePanel.classList.add('active');
-            }
         }
 
         function generatePrompt() {
@@ -800,7 +820,7 @@
                 }
             }
 
-            var testCount = document.getElementById('test-count').value.trim();
+            var testCount = document.getElementById('test-count').value.trim() || '15';
             var rawTitle = document.getElementById('story-title').value.trim();
             var storyDesc = document.getElementById('story-desc').value.trim();
             var businessRules = document.getElementById('business-rules').value.trim();
@@ -822,18 +842,14 @@
 
             for (var i = 0; i < categories.length; i++) {
                 var cat = categories[i];
-                var titleText = 'TS_' + cleanedTitle + ' (' + cat.label + ')';
+                var titleText = 'TS' + cleanedTitle + ' (' + cat.label + ' SCENARIOS)';
                 var chip = document.createElement('div');
                 chip.className = 'title-chip';
-                chip.innerHTML = '<span>' + escapeHtml(cat.emoji + ' ' + titleText) + '</span>' +
-                    '<span class="chip-copied">Copied!</span>' +
-                    '<button onclick="copyChip(this, \'' + escapeAttr(titleText) + '\')" title="Copy">' +
-                    '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
-                    '</button>';
+                chip.innerHTML = '<span>' + escapeHtml(cat.emoji + ' ' + titleText) + '</span><span class="chip-copied">Copied!</span><button class="chip-copy-btn" onclick="copyChip(this, \'' + escapeAttr(titleText) + '\')" title="Copy"><i class="bi bi-clipboard"></i></button>';
                 chipsContainer.appendChild(chip);
             }
 
-            document.getElementById('titles-section').style.display = 'block';
+            document.getElementById('titles-section').classList.add('show');
 
             var storyBlock = rawTitle;
             if (storyDesc) {
@@ -843,12 +859,21 @@
                 storyBlock += '\n\nAdditional Business Rules / Notes:\n' + businessRules;
             }
 
-            var template = '?? ROLE & EXECUTION CONTEXT (ENTERPRISE / NON-NEGOTIABLE)\n\nAct as a Principal / Senior Web Software Quality Assurance Engineer operating within a large-scale, production-grade enterprise environment governed by:\n\n� Strict QA governance\n� Auditability\n� Regulatory compliance\n� Formal release sign-off\n\nYou are executing a QA deliverable, not assisting, explaining, summarizing, or teaching.\n\nYour output MUST be suitable for:\n\n� Enterprise audit\n� Regulated release sign-off\n� Immediate manual execution\n� Automation readiness (Cypress / Playwright / Selenium compatible)\n\n?? Any deviation from instructions is a HARD FAILURE.\n\n?? APPLICATION CONTEXT (IMMUTABLE)\n\nTarget Platform: **' + platform + '**\nTechnology Stack: **' + techStack + '**\nApplication Type: Web Dashboard\nFrontend Framework: Angular (Enterprise SPA)\nBackend: PHP (RESTful APIs)\nDatabase: MySQL\nAuthentication: Token-based (JWT / Session)\nConnectivity: Online only (? No offline or cached behavior)\nBusiness Domain: Gazer (enterprise, transaction-driven, multi-user system)\n\n?? ASSUMPTIONS (MANDATORY)\n\n� Production-grade data sensitivity\n� Backend is the single source of truth\n� Stateless frontend\n� Role-based access control enforced server-side\n\nZero tolerance for:\n\n? Data corruption\n? Partial writes\n? UI-only validation\n? Undefined or inconsistent states\n? Silent API failures\n\n?? INPUT FORMAT (STRICT)\n\nYou will receive ONE dashboard user story only, enclosed exactly as follows:\n\n//Start Story//\n' + storyBlock + '\n//End Story//\n\nThe story may include:\n\n� Business rules\n� UI behaviors\n� Validation rules\n� API constraints\n� Role restrictions\n� Acceptance criteria\n� Edge cases\n� Implicit enterprise risks\n\n? You MUST NOT assume missing requirements are \"out of scope\".\n\n??? SCOPE NON-REDUCTION RULE (ABSOLUTE)\n\nYou MUST NOT reduce coverage based on:\n\n� Dashboard simplicity\n� Read-only nature\n� Admin-only access\n� \"Just UI\" logic\n� Aggregated data\n� \"Backend already validates\" assumptions\n\nEvery story � even visual or reporting-only dashboards � requires full enterprise-grade coverage.\n\n?? OBJECTIVE � COVERAGE EXPANSION MODE\n\nGenerate a MAXIMALLY EXHAUSTIVE, EXECUTION-READY TEST SUITE for the Angular dashboard.\n\nYour goal is risk elimination, not documentation.\n\n?? GLOBAL TEST CASE COUNT RULE (ABSOLUTE)\n\nEach test section MUST contain **AT LEAST ' + testCount + ' FULLY DEFINED TEST CASES**.\n\nIf ANY section produces fewer than this number ? THE OUTPUT IS INVALID.\n\n?? MANDATORY MINIMUM TEST CASE COUNTS (PER SECTION)\n\nCategory                          Minimum FULL Test Cases\n? Happy Path                       10�15\n? Negative / Validation             15�25\n?? Edge & Boundary                   10�20\n?? UI / UX                           12�20\n?? Navigation & State                8�15\n?? Security & Data Integrity         8�12\n?? Performance & Stability           6�10\n\n?? If ANY section has fewer cases ? OUTPUT IS INVALID.\n\n?? ABSOLUTE ANTI-OUTLINE RULE (CRITICAL)\n\nThe following are STRICTLY FORBIDDEN:\n\n? Outlines\n? Grouped scenarios\n? Shared steps\n? Shared expected results\n? Placeholder text\n? ID ranges (e.g. TC-01 ? TC-10)\n? \"Same as above\"\n? \"Includes\"\n? Bullet summaries replacing test cases\n\n? Generic phrases such as:\n\n� \"Handled gracefully\"\n� \"No crash\"\n� \"Works as expected\"\n\n?? If detected ? the entire section must be regenerated.\n\n?? TEST CASE ATOMICITY (MANDATORY)\n\nEVERY test case MUST be fully standalone and atomic.\n\nEach test case MUST include:\n\n� Unique Test Case ID\n� Clear, business-readable title\n� Scenario Type\n(Happy / Negative / Edge / UI / Navigation / Security / Performance)\n� Priority (P0�P3)\n� Case-specific Preconditions\n� Atomic, numbered test steps (= 6 steps)\n� Explicit, verifiable expected results (= 5 assertions)\n\n? You may NOT:\n\n� Share steps between cases\n� Reference other test cases\n� Combine multiple validations in one test\n\n?? MINIMUM DEPTH RULE (NON-NEGOTIABLE)\n\nEach test case MUST explicitly verify ALL of the following:\n\n?? Angular UI behavior\n?? API request payload & headers\n?? Backend response code\n?? Database impact (write / no-write / rollback / aggregation accuracy)\n?? Navigation, routing, or UI state outcome\n\nIf a scenario cannot meet this depth ? split it into multiple test cases.\n\n?? REQUIRED TEST SUITE STRUCTURE\n\n1?? GENERAL PRECONDITIONS (WRITTEN ONCE)\n\nMust include at minimum:\n\n� Angular dashboard deployed successfully\n� Production-like build configuration\n� User authentication state defined\n� Valid role/permission mapping\n� Stable internet connection\n� Browser compatibility defined\n� Required browser permissions granted\n� Backend APIs reachable\n� MySQL populated with valid enterprise data\n� Backend is the single source of truth\n� No offline, cache, or mock data enabled\n\n2?? TEST SCENARIOS & TEST CASES\n\nYou MUST generate FULLY EXPANDED test cases under ALL sections:\n\n? HAPPY PATH\n? NEGATIVE & VALIDATION\n?? EDGE & BOUNDARY\n?? UI / UX\n?? NAVIGATION & STATE\n?? SECURITY & DATA INTEGRITY\n?? PERFORMANCE & STABILITY\n\n?? CONTROLLED DELIVERY MODE (MANDATORY)\n\nYou MUST follow section-by-section delivery:\n\n� Deliver ONE section at a time\n� At the top of EACH section, explicitly state:\n\n  � Delivered test case count\n  � Required minimum\n  � Compliance status\n\n? Do NOT proceed to the next section until explicitly instructed with:\n\nCONTINUE � <SECTION NAME>\n\n?? SELF-AUDIT & FAILSAFE (MANDATORY)\n\nBefore finalizing EACH section, you MUST internally verify:\n\n?? No outlines or grouped content exist\n?? Minimum test case count is met\n?? Each test case meets depth requirements\n?? No shared steps or expectations exist\n\nIf ANY violation is detected ? regenerate the section before responding.\n\n?? FINAL COMPLIANCE GATE (KILL SWITCH)\n\nIf ANY section:\n\n? Misses its minimum count\n? Contains outline-style content\n? Uses forbidden patterns\n\n?? The response is considered FAILED and MUST be regenerated from scratch.\n\n? FINAL OUTPUT REQUIREMENTS\n\nThe final output MUST:\n\n?? Be executable by any QA engineer without clarification\n?? Be suitable for manual execution and automation\n?? Be audit-ready and enterprise-compliant\n?? Reflect real Gazer dashboard business risk\n?? Contain ZERO placeholders or summaries';
+            // Calculate test case counts based on user input
+            var testNum = parseInt(testCount) || 15;
+            var happyPath = Math.round(testNum * 0.7) + '-' + testNum;
+            var negativeVal = testNum + '-' + Math.round(testNum * 1.7);
+            var edgeBoundary = Math.round(testNum * 0.6) + '-' + Math.round(testNum * 1.3);
+            var uiUx = Math.round(testNum * 0.8) + '-' + Math.round(testNum * 1.3);
+            var navigation = Math.round(testNum * 0.5) + '-' + testNum;
+            var security = Math.round(testNum * 0.5) + '-' + Math.round(testNum * 0.8);
+            var performance = Math.round(testNum * 0.4) + '-' + Math.round(testNum * 0.7);
+
+            var template = '\uD83D\uDD0F ROLE & EXECUTION CONTEXT (ENTERPRISE / NON-NEGOTIABLE)\n\nAct as a Principal / Senior Web Software Quality Assurance Engineer operating within a large-scale, production-grade enterprise environment governed by:\n\n\u2705 Strict QA governance\n\u2705 Auditability\n\u2705 Regulatory compliance\n\u2705 Formal release sign-off\n\nYou are executing a QA deliverable, not assisting, explaining, summarizing, or teaching.\n\nYour output MUST be suitable for:\n\n\u2705 Enterprise audit\n\u2705 Regulated release sign-off\n\u2705 Immediate manual execution\n\u2705 Automation readiness (Cypress / Playwright / Selenium compatible)\n\n\u26A0\uFE0F ANY DEVIATION FROM INSTRUCTIONS IS A HARD FAILURE.\n\n\uD83D\uDD0F APPLICATION CONTEXT (IMMUTABLE)\n\nTarget Platform: **' + platform + '**\nTechnology Stack: **' + techStack + '**\nApplication Type: Web Dashboard\nFrontend Framework: Angular (Enterprise SPA)\nBackend: PHP (RESTful APIs)\nDatabase: MySQL\nAuthentication: Token-based (JWT / Session)\nConnectivity: Online only (\u274C No offline or cached behavior)\nBusiness Domain: Gazer (enterprise, transaction-driven, multi-user system)\n\n\uD83D\uDD0F ASSUMPTIONS (MANDATORY)\n\n\u2705 Production-grade data sensitivity\n\u2705 Backend is the single source of truth\n\u2705 Stateless frontend\n\u2705 Role-based access control enforced server-side\n\nZero tolerance for:\n\n\u274C Data corruption\n\u274C Partial writes\n\u274C UI-only validation\n\u274C Undefined or inconsistent states\n\u274C Silent API failures\n\n\uD83D\uDD0F INPUT FORMAT (STRICT)\n\nYou will receive ONE dashboard user story only, enclosed exactly as follows:\n\n//Start Story//\n' + storyBlock + '\n//End Story//\n\nThe story may include:\n\n\u2705 Business rules\n\u2705 UI behaviors\n\u2705 Validation rules\n\u2705 API constraints\n\u2705 Role restrictions\n\u2705 Acceptance criteria\n\u2705 Edge cases\n\u2705 Implicit enterprise risks\n\n\u26A0\uFE0F YOU MUST NOT ASSUME MISSING REQUIREMENTS ARE "OUT OF SCOPE".\n\n\u26A0\uFE0F\u26A0\uFE0F SCOPE NON-REDUCTION RULE (ABSOLUTE)\n\nYou MUST NOT reduce coverage based on:\n\n\u2705 Dashboard simplicity\n\u2705 Read-only nature\n\u2705 Admin-only access\n\u2705 "Just UI" logic\n\u2705 Aggregated data\n\u2705 "Backend already validates" assumptions\n\nEvery story - even visual or reporting-only dashboards - requires full enterprise-grade coverage.\n\n\uD83D\uDD0F OBJECTIVE - COVERAGE EXPANSION MODE\n\nGenerate a MAXIMALLY EXHAUSTIVE, EXECUTION-READY TEST SUITE for the Angular dashboard.\n\nYour goal is risk elimination, not documentation.\n\n\uD83D\uDD0F GLOBAL TEST CASE COUNT RULE (ABSOLUTE)\n\nEach test section MUST contain **AT LEAST ' + testCount + ' FULLY DEFINED TEST CASES**.\n\nIf ANY section produces fewer than this number - THE OUTPUT IS INVALID.\n\n\uD83D\uDD0F MANDATORY MINIMUM TEST CASE COUNTS (PER SECTION)\n\nCategory                                            Minimum FULL Test Cases\n\u2705 Happy Path                                    ' + happyPath + '\n\u274C Negative / Validation                          ' + negativeVal + '\n\u26A0\uFE0F Edge & Boundary                              ' + edgeBoundary + '\n\ud83c\udfa8 UI / UX                                      ' + uiUx + '\n\ud83d\uddd4\ufe0f Navigation & State                           ' + navigation + '\n\ud83d\uddd0\ufe0f Security & Data Integrity                 ' + security + '\n\u23f1\ufe0f Performance & Stability                      ' + performance + '\n\n\uD83D\uDD0F IF ANY SECTION HAS FEWER CASES - OUTPUT IS INVALID.\n\n\uD83D\uDD0F ABSOLUTE ANTI-OUTLINE RULE (CRITICAL)\n\nThe following are STRICTLY FORBIDDEN:\n\n\u274C Outlines\n\u274C Grouped scenarios\n\u274C Shared steps\n\u274C Shared expected results\n\u274C Placeholder text\n\u274C ID ranges (e.g. TC-01 - TC-10)\n\u274C "Same as above"\n\u274C "Includes"\n\u274C Bullet summaries replacing test cases\n\n\u274C Generic phrases such as:\n\n\u2705 "Handled gracefully"\n\u2705 "No crash"\n\u2705 "Works as expected"\n\n\uD83D\uDD0F IF DETECTED - THE ENTIRE SECTION MUST BE REGENERATED.\n\n\uD83D\uDD0F TEST CASE ATOMICITY (MANDATORY)\n\nEVERY test case MUST be fully standalone and atomic.\n\nEach test case MUST include:\n\n\u2705 Unique Test Case ID\n\u2705 Clear, business-readable title\n\u2705 Scenario Type (Happy / Negative / Edge / UI / Navigation / Security / Performance)\n\u2705 Priority (P0-P3)\n\u2705 Case-specific Preconditions\n\u2705 Atomic, numbered test steps (3-6 steps)\n\u2705 Explicit, verifiable expected results (3-5 assertions)\n\n\u274C You may NOT:\n\n\u274C Share steps between cases\n\u274C Reference other test cases\n\u274C Combine multiple validations in one test\n\n\uD83D\uDD0F MINIMUM DEPTH RULE (NON-NEGOTIABLE)\n\nEach test case MUST explicitly verify ALL of the following:\n\n\u2705 Angular UI behavior\n\u2705 API request payload & headers\n\u2705 Backend response code\n\u2705 Database impact (write / no-write / rollback / aggregation accuracy)\n\u2705 Navigation, routing, or UI state outcome\n\nIf a scenario cannot meet this depth - split it into multiple test cases.\n\n\uD83D\uDD0F REQUIRED TEST SUITE STRUCTURE\n\n1. GENERAL PRECONDITIONS (WRITTEN ONCE)\n\nMust include at minimum:\n\n\u2705 Angular dashboard deployed successfully\n\u2705 Production-like build configuration\n\u2705 User authentication state defined\n\u2705 Valid role/permission mapping\n\u2705 Stable internet connection\n\u2705 Browser compatibility defined\n\u2705 Required browser permissions granted\n\u2705 Backend APIs reachable\n\u2705 MySQL populated with valid enterprise data\n\u2705 Backend is the single source of truth\n\u2705 No offline, cache, or mock data enabled\n\n2. TEST SCENARIOS & TEST CASES\n\nYou MUST generate FULLY EXPANDED test cases under ALL sections:\n\n\u2705 HAPPY PATH\n\u274C NEGATIVE & VALIDATION\n\u26A0\uFE0F EDGE & BOUNDARY\n\ud83c\udfa8 UI / UX\n\ud83d\uddd4\ufe0f NAVIGATION & STATE\n\ud83d\uddd0\ufe0f SECURITY & DATA INTEGRITY\n\u23f1\ufe0f PERFORMANCE & STABILITY\n\n\uD83D\uDD0F CONTROLLED DELIVERY MODE (MANDATORY)\n\nYou MUST follow section-by-section delivery:\n\n\u2705 Deliver ONE section at a time\n\u2705 At the top of EACH section, explicitly state:\n\n  \u2705 Delivered test case count\n  \u2705 Required minimum\n  \u2705 Compliance status\n\n\u26A0\uFE0F DO NOT PROCEED TO THE NEXT SECTION UNTIL EXPLICITLY INSTRUCTED WITH: CONTINUE - <SECTION NAME>\n\n\uD83D\uDD0F SELF-AUDIT & FAILSAFE (MANDATORY)\n\nBefore finalizing EACH section, you MUST internally verify:\n\n\u2705 No outlines or grouped content exist\n\u2705 Minimum test case count is met\n\u2705 Each test case meets depth requirements\n\u2705 No shared steps or expectations exist\n\nIf ANY violation is detected - regenerate the section before responding.\n\n\uD83D\uDD0F FINAL COMPLIANCE GATE (KILL SWITCH)\n\nIf ANY section:\n\n\u274C Misses its minimum count\n\u274C Contains outline-style content\n\u274C Uses forbidden patterns\n\n\uD83D\uDD0F THE RESPONSE IS CONSIDERED FAILED AND MUST BE REGENERATED FROM SCRATCH.\n\n\uD83D\uDD0F FINAL OUTPUT REQUIREMENTS\n\nThe final output MUST:\n\n\u2705 BE EXECUTABLE BY ANY QA ENGINEER WITHOUT CLARIFICATION\n\u2705 BE SUITABLE FOR MANUAL EXECUTION AND AUTOMATION\n\u2705 BE AUDIT-READY AND ENTERPRISE-COMPLIANT\n\u2705 REFLECT REAL GAZER DASHBOARD BUSINESS RISK\n\u2705 CONTAIN ZERO PLACEHOLDERS OR SUMMARIES';
 
             document.getElementById('output-textarea').value = template;
-            document.getElementById('output-section').style.display = 'block';
-
-            document.getElementById('titles-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('output-section').classList.add('show');
+            document.getElementById('previewContent').textContent = template;
         }
 
         function escapeHtml(text) {
@@ -889,116 +914,98 @@
 
         function copyToClipboard() {
             var textarea = document.getElementById('output-textarea');
-            textarea.select();
-            textarea.setSelectionRange(0, 99999);
-
             var success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (e) {
-                success = false;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textarea.value);
+                success = true;
+            } else {
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                try {
+                    success = document.execCommand('copy');
+                } catch (e) {
+                    success = false;
+                }
             }
 
-            if (!success) {
-                navigator.clipboard.writeText(textarea.value).catch(function () { });
+            if (success) {
+                showCopyFeedback();
             }
+        }
 
-            var feedback = document.getElementById('copy-feedback');
-            feedback.classList.add('visible');
-            setTimeout(function () {
-                feedback.classList.remove('visible');
-            }, 2200);
+        function copyFromPreview() {
+            var content = document.getElementById('previewContent').textContent;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(content);
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = content;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            showCopyFeedback();
         }
 
         function generateBugPrompt() {
             var bugTitle = document.getElementById('bug-title').value.trim();
-            var bugSummary = document.getElementById('bug-summary').value.trim();
             var bugPreconditions = document.getElementById('bug-preconditions').value.trim();
             var bugSteps = document.getElementById('bug-steps').value.trim();
             var bugExpected = document.getElementById('bug-expected').value.trim();
             var bugActual = document.getElementById('bug-actual').value.trim();
 
-            var template = 'Act as a Senior / Principal Software QA Engineer in a large-scale, production-grade enterprise environment.\n\n' +
-                'Your task is to generate a complete, professional bug report using the exact structure, tone, and level of detail defined below.\n\n' +
-                'GENERAL RULES:\n' +
-                '- Use clear, neutral, non-blaming language\n' +
-                '- Be precise and implementation-agnostic\n' +
-                '- Assume the audience includes developers, product owners, and QA leads\n' +
-                '- Focus on user impact, UX correctness, and business logic\n' +
-                '- Do NOT invent features \u2014 only formalize the described behavior\n' +
-                '- Fix any grammar or wording issues implicitly\n\n' +
-                'BUG REPORT STRUCTURE (MANDATORY):\n\n' +
-                '\uD83D\uDC1E Bug Title\n' +
-                '- Concise, action-oriented, and searchable\n' +
-                '- Clearly describe the incorrect behavior and condition\n\n' +
-                '\uD83D\uDCCC Preconditions\n' +
-                '- Bullet points\n' +
-                '- Only include required environmental or user state assumptions\n\n' +
-                '\uD83D\uDD01 Steps to Reproduce\n' +
-                '- Numbered steps\n' +
-                '- Clear, minimal, and deterministic\n' +
-                '- No ambiguity or extra commentary\n\n' +
-                '\u2705 Expected Result\n' +
-                '- Describe correct system behavior\n' +
-                '- Include UX, system logic, and user flow expectations\n' +
-                '- Explicitly mention when validation SHOULD or SHOULD NOT occur\n' +
-                '- Add a short rationale if it clarifies business intent\n\n' +
-                '\u274C Actual Result\n' +
-                '- Describe the observed incorrect behavior\n' +
-                '- Include system feedback (toasts, errors, blocks, messages)\n' +
-                '- Avoid interpretation \u2014 state facts\n\n' +
-                '\u26A0\uFE0F Impact\n' +
-                '- Bullet points\n' +
-                '- Focus on:\n' +
-                '  - User experience\n' +
-                '  - Business impact\n' +
-                '  - Conversion / onboarding risks\n' +
-                '  - UX consistency\n\n' +
-                '\uD83E\uDDE0 Notes / Observations\n' +
-                '- Technical or UX insights\n' +
-                '- Timing or flow issues\n' +
-                '- Copy or message defects\n' +
-                '- Root-cause hints (without blaming)\n\n' +
-                '\uD83E\uDDE9 Recommendation\n' +
-                '- Clear, actionable improvement proposals\n' +
-                '- Align validation timing with business logic\n' +
-                '- Include UX and system behavior adjustments\n' +
-                '- Use bullet points\n\n' +
-                'OUTPUT RULES:\n' +
-                '- Return ONLY the completed bug report\n' +
-                '- Follow the exact section order and emoji headers\n' +
-                '- No extra explanations\n' +
-                '- No meta commentary\n\n' +
-                'INPUTS (FROM USER):\n' +
-                'Bug Title: ' + bugTitle + '\n' +
-                'Bug Description / Summary:\n' + bugSummary + '\n\n' +
-                'Preconditions:\n' + bugPreconditions + '\n\n' +
-                'Steps to Reproduce:\n' + bugSteps + '\n\n' +
-                'Expected Result:\n' + bugExpected + '\n\n' +
-                'Actual Result:\n' + bugActual;
+            var template = 'Act as a Senior / Principal Software QA Engineer in a large-scale, production-grade enterprise environment.\n\nYour task is to generate a complete, professional bug report using the exact structure, tone, and level of detail defined below.\n\nGENERAL RULES:\n- Use clear, neutral, non-blaming language\n- Be precise and implementation-agnostic\n- Assume the audience includes developers, product owners, and QA leads\n- Focus on user impact, UX correctness, and business logic\n- DO NOT invent features - only formalize the described behavior\n- Fix any grammar or wording issues implicitly\n\nBUG REPORT STRUCTURE (MANDATORY):\n\n\uD83D\uDC1E BUG TITLE\n- Concise, action-oriented, and searchable\n- Clearly describe the incorrect behavior and condition\n\n\uD83D\uDCCC PRECONDITIONS\n- Bullet points\n- Only include required environmental or user state assumptions\n\n\uD83D\uDD01 STEPS TO REPRODUCE\n- Numbered steps\n- Clear, minimal, and deterministic\n- No ambiguity or extra commentary\n\n\u2705 EXPECTED RESULT\n- Describe correct system behavior\n- Include UX, system logic, and user flow expectations\n- Explicitly mention when validation SHOULD or SHOULD NOT occur\n- Add a short rationale if it clarifies business intent\n\n\u274C ACTUAL RESULT\n- Describe the observed incorrect behavior\n- Include system feedback (toasts, errors, blocks, messages)\n- Avoid interpretation - state facts\n\n\u26A0\uFE0F IMPACT\n- Bullet points\n- Focus on:\n  - User experience\n  - Business impact\n  - Conversion / onboarding risks\n  - UX consistency\n\n\uD83E\uDDE0 NOTES / OBSERVATIONS\n- Technical or UX insights\n- Timing or flow issues\n- Copy or message defects\n- Root-cause hints (without blaming)\n\n\uD83E\uDDE9 RECOMMENDATION\n- Clear, actionable improvement proposals\n- Align validation timing with business logic\n- Include UX and system behavior adjustments\n- Use bullet points\n\nOUTPUT RULES:\n- Return ONLY the completed bug report\n- Follow the exact section order and emoji headers\n- No extra explanations\n- No meta commentary\n\nINPUTS (FROM USER):\nBug Title: ' + bugTitle + '\n\nPreconditions:\n' + bugPreconditions + '\n\nSteps to Reproduce:\n' + bugSteps + '\n\nExpected Result:\n' + bugExpected + '\n\nActual Result:\n' + bugActual;
 
             document.getElementById('bug-output-textarea').value = template;
-            document.getElementById('bug-output-section').style.display = 'block';
-            document.getElementById('bug-output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('bug-output-section').classList.add('show');
+            document.getElementById('bugPreviewContent').textContent = template;
         }
 
         function copyBugPrompt() {
             var textarea = document.getElementById('bug-output-textarea');
-            textarea.select();
-            textarea.setSelectionRange(0, 99999);
-
             var success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (e) {
-                success = false;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textarea.value);
+                success = true;
+            } else {
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                try {
+                    success = document.execCommand('copy');
+                } catch (e) {
+                    success = false;
+                }
             }
 
-            if (!success) {
-                navigator.clipboard.writeText(textarea.value).catch(function () { });
+            if (success) {
+                showCopyFeedback();
             }
+        }
 
-            var feedback = document.getElementById('bug-copy-feedback');
+        function copyFromBugPreview() {
+            var content = document.getElementById('bugPreviewContent').textContent;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(content);
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = content;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            showCopyFeedback();
+        }
+
+        function showCopyFeedback() {
+            var feedback = document.getElementById('copy-feedback');
             feedback.classList.add('visible');
             setTimeout(function () {
                 feedback.classList.remove('visible');
@@ -1009,7 +1016,6 @@
             updateTechStack();
         });
     </script>
-
 </body>
 
 </html>
