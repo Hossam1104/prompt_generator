@@ -529,7 +529,7 @@
                         <h6><i class="bi bi-file-text"></i> Test Configuration</h6>
 
                         <div class="row">
-                            <div class="col-md-6 mb-4">
+                            <div class="col-md-3 mb-4">
                                 <label for="platform" class="form-label">Target Platform</label>
                                 <select id="platform" class="form-select" onchange="updateTechStack()">
                                     <option value="">Select Platform...</option>
@@ -540,20 +540,20 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6 mb-4">
+                            <div class="col-md-9 mb-4">
                                 <label for="tech-stack" class="form-label">Technology Stack</label>
                                 <select id="tech-stack" class="form-select" onchange="updateTechBadges()">
                                     <option value="">Select Technology...</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-6 mb-4">
+                            <div class="col-md-3 mb-4">
                                 <label for="test-count" class="form-label">Minimum Test Cases Per Section</label>
                                 <input type="number" id="test-count" class="form-control" placeholder="e.g., 15"
                                     value="15">
                             </div>
 
-                            <div class="col-md-6 mb-4">
+                            <div class="col-md-9 mb-4">
                                 <label for="story-title" class="form-label">Story Title</label>
                                 <input type="text" id="story-title" class="form-control"
                                     placeholder="e.g., US-123: Dashboard Analytics">
@@ -574,9 +574,19 @@
 
                         <div id="tech-badges" class="mb-4"></div>
 
-                        <button class="btn btn-generate" onclick="generatePrompt()">
-                            <i class="bi bi-sparkles"></i> Generate Prompt
-                        </button>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <button class="btn btn-generate mb-0" onclick="generatePrompt()">
+                                <i class="bi bi-sparkles"></i> Generate Prompt
+                            </button>
+                            <button id="btn-copy-main" class="btn btn-copy d-none" onclick="copyToClipboard()">
+                                <i class="bi bi-clipboard"></i> Copy Prompt
+                            </button>
+                            <button id="btn-preview-main" class="btn btn-secondary d-none" data-bs-toggle="modal"
+                                data-bs-target="#previewModal"
+                                style="background: #64748b; border: none; padding: 12px 20px;">
+                                <i class="bi bi-eye"></i> Preview
+                            </button>
+                        </div>
                     </div>
 
                     <div id="titles-section" class="hidden-section mt-5">
@@ -589,13 +599,6 @@
                         <div class="mb-3">
                             <textarea id="output-textarea" readonly></textarea>
                         </div>
-                        <button class="btn btn-copy" onclick="copyToClipboard()">
-                            <i class="bi bi-clipboard"></i> Copy Prompt
-                        </button>
-                        <button class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#previewModal"
-                            style="background: #64748b; border: none;">
-                            <i class="bi bi-eye"></i> Preview
-                        </button>
                     </div>
                 </div>
 
@@ -845,7 +848,7 @@
                 var titleText = 'TS' + cleanedTitle + ' (' + cat.label + ' SCENARIOS)';
                 var chip = document.createElement('div');
                 chip.className = 'title-chip';
-                chip.innerHTML = '<span>' + escapeHtml(cat.emoji + ' ' + titleText) + '</span><span class="chip-copied">Copied!</span><button class="chip-copy-btn" onclick="copyChip(this, \'' + escapeAttr(titleText) + '\')" title="Copy"><i class="bi bi-clipboard"></i></button>';
+                chip.innerHTML = '<div class="d-flex align-items-center"><input type="checkbox" class="form-check-input my-0 me-2" disabled><span>' + escapeHtml(cat.emoji + ' ' + titleText) + '</span></div><span class="chip-copied">Copied!</span><button class="chip-copy-btn" onclick="copyChip(this, \'' + escapeAttr(titleText) + '\')" title="Copy"><i class="bi bi-clipboard"></i></button>';
                 chipsContainer.appendChild(chip);
             }
 
@@ -874,6 +877,10 @@
             document.getElementById('output-textarea').value = template;
             document.getElementById('output-section').classList.add('show');
             document.getElementById('previewContent').textContent = template;
+
+            // Show action buttons
+            document.getElementById('btn-copy-main').classList.remove('d-none');
+            document.getElementById('btn-preview-main').classList.remove('d-none');
         }
 
         function escapeHtml(text) {
@@ -888,6 +895,25 @@
 
         function copyChip(btn, text) {
             var chip = btn.parentElement;
+            var checkbox = chip.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+
+            var allCheckboxes = document.querySelectorAll('#title-chips input[type="checkbox"]');
+            var allChecked = true;
+            for (var i = 0; i < allCheckboxes.length; i++) {
+                if (!allCheckboxes[i].checked) {
+                    allChecked = false;
+                    break;
+                }
+            }
+
+            if (allChecked) {
+                document.getElementById('story-title').value = '';
+                document.getElementById('story-desc').value = '';
+            }
+
             var copiedLabel = chip.querySelector('.chip-copied');
 
             if (navigator.clipboard) {

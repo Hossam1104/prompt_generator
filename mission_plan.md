@@ -621,9 +621,18 @@ Additional Business Rules / Notes:
   * Injected emoji icons into the test case category list in the generated prompt
   * Icons include: Happy Path (✅), Negative/Validation (❌), Edge (⚠️), UI/UX (🎨), Navigation (🧭), Security (🔐), Performance (⏱️)
 
-* **Dynamic Count Alignment:**
-  * Test case count ranges are derived from the exact user input value
-  * Ensures every section minimum is computed relative to the entered count
+- **Dynamic Count Alignment:**
+  - Test case count ranges are derived from the exact user input value
+  - Ensures every section minimum is computed relative to the entered count
+#### 13. **Workflow Logic (Checkboxes & Auto-Clear) (Phase 9)**
+- **Change:** Added progress tracking to section titles and auto-reset logic for efficiency.
+- **Implementation:**
+  - Added disabled checkbox to each section title chip
+  - **Auto-Check:** Copying a title programmatically checks its box
+  - **Auto-Clear:** When all 7 checkboxes are checked, `story-title` and `story-desc` inputs are cleared automatically
+  - **Layout:** optimized form grid and moved Copy/Preview buttons inline with Generate for better workflow
+  
+---
 
 ---
 
@@ -646,5 +655,8 @@ Additional Business Rules / Notes:
 | Bug Summary removal       | Bug Fix             | Removed unused field and prompt reference      |
 | Prompt iconography        | Enhancement         | Emoji icons in category list                   |
 | Dynamic count alignment   | Enhancement         | Section counts derived from user input         |
+| Section Checkboxes        | New Feature         | Visual progress tracking for test generation   |
+| Auto-Clear Logic          | New Feature         | Streamlined workflow for sequential stories    |
+| Action Buttons Relocation | UX Enhancement      | Improved accessibility of key actions          |
 
 **Status:** All modifications implemented and tested. System is fully operational and compliant with updated enterprise requirements.

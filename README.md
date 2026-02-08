@@ -20,7 +20,8 @@ This tool generates highly detailed, audit-ready test case prompts tailored for 
 - **Dynamic Prompt Generation** — Combines master template with user inputs
 - **Intelligent Technology Stack Dropdown** — Platform-dependent tech selection with visual component badges
 - **Bugs Enhancement Prompt Tab** — Generates enterprise bug report prompts for AI completion
-- **Section Title Generator** — Auto-generates 7 test category titles with one-click copy
+- **Section Title Generator** — Auto-generates 7 test category titles with one-click copy and progress tracking
+- **Smart Progress Tracking** — Checkboxes auto-fill on copy; auto-clears story inputs on completion
 - **Enterprise Compliance** — Outputs audit-ready, regulation-compliant test prompts
 - **Modern UI/UX** — Clean, gradient-based design with Cairo font family
 
@@ -59,6 +60,8 @@ Pre-formatted test category titles ready for copy/paste:
 - 🔄 `TS_<Story Title> (NAVIGATION & STATE)`
 - 🔐 `TS_<Story Title> (SECURITY & DATA INTEGRITY)`
 - 🚦 `TS_<Story Title> (PERFORMANCE & STABILITY)`
+- **Auto-Tracking:** Each title has a checkbox that automatically checks when copied.
+- **Auto-Reset:** Once all titles are copied, the Story Title and Description fields are automatically cleared for the next task.
 
 #### 2. Master QA Prompt
 A comprehensive, structured prompt containing:
@@ -110,7 +113,8 @@ A professional bug report prompt containing:
 5. Copies "TS_User Login Authentication (HAPPY PATH)" title
 6. Copies full prompt
 7. Pastes into Claude with instruction: "Generate test cases per this prompt"
-8. Iterates through all 7 test categories
+8. Iterates through all 7 test categories (checkboxes auto-check on copy)
+9. Upon copying the final category, story inputs auto-clear for the next user story
 ```
 
 ---
@@ -274,7 +278,14 @@ Per enterprise QA requirements:
 
 ## 🔄 Version History
 
-### v2.1 (Current) — Enterprise Edition
+### v2.2 (Current) — Workflow Enhancement
+- Added progress tracking checkboxes to section titles
+- Implemented auto-check on copy behavior
+- Added auto-clear logic for story inputs upon full suite completion
+- Relocated Copy/Preview buttons to inline row with Generate button for better ergonomics
+- Optimized form layout (3/9 column structure) for better space utilization
+
+### v2.1 — Enterprise Edition
 - Added Bugs Enhancement Prompt tab with bug report generator
 - Added bug prompt template with structured sections and rules
 - Added bug prompt inputs and copy feedback
